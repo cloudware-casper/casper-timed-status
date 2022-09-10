@@ -1,0 +1,12 @@
+{
+  "name": "@cloudware-casper/casper-timed-status",
+  "main": "casper-timed-status.js",
+  "version": "0.0.1",
+  "description": "Progress and status indicator with timeout visualisation",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "dependencies": {
+    "@cloudware-casper/casper-icons": "^3.x"
+  }
+}
