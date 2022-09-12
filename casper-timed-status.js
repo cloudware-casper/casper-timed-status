@@ -39,17 +39,15 @@ class CasperTimedStatus extends LitElement {
     icon: {
       type: String,
       reflect: false
-    },
-    timer: {
-      type: Boolean,
-      reflect: false
-    },
+    }
   }
 
   static styles = css`
     :host {
       display: flex;
       position: relative;
+      width: 100px;
+      height: 100px;
     }
 
     .hide {
@@ -102,18 +100,14 @@ class CasperTimedStatus extends LitElement {
     super();
     this.state    = 'idle';
     this.progress = undefined;
-    this.timer    = false;
     this.timeout  = 30;
+    window.p = this;
   }
 
   //***************************************************************************************//
   //                                ~~~ LIT life cycle ~~~                                 //
   //***************************************************************************************//
 
-  firstUpdated () {
-    this._animation = this.shadowRoot.getElementById('timer-ring');
-    this._icon      = this.icon;
-  }
 
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
@@ -127,7 +121,7 @@ class CasperTimedStatus extends LitElement {
           this._pclass  = '';
           this._icon    = this.icon;
           this.progress = 0;
-          this._animation.beginElement();
+          //this._animation.beginElement();
           break;
         case 'success':
           this._icon   = '/static/icons/check';
@@ -147,9 +141,23 @@ class CasperTimedStatus extends LitElement {
           break;
       }
     }
+    if ( changedProperties.has('progress') ) {
+      const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
+
+      if ( this.progress === undefined ) {
+        this._fromDasharray = '0 ' + p;
+        this._toDasharray   = '';
+      } else {
+        const p1 = this.progress / 100 * p;
+        const p2 = p - p1;
+        this._fromDasharray =  this._toDasharray || '0 ' + p;
+        this._toDasharray   =  p1 + ' ' + p2;
+      }
+    }
   }
 
   render () {
+    console.log('render cts');
     const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
     const p1 = this.progress / 100 * p;
     const p2 = p - p1;
@@ -158,8 +166,7 @@ class CasperTimedStatus extends LitElement {
       <casper-icon class="ball" icon=${this._icon}></casper-icon>
       <svg class="ball ${this._pclass}" viewBox="0 0 100 100">
         <circle class="donut-ring ring" cx="50" cy="50" r="45"></circle>
-        ${this.progress === 0 ? '' : svg`
-        <circle class="donut-ring ring ${this.timer ? 'progress' : 'timer'}" cx="50" cy="50" r="45" stroke-dasharray="0 ${p}" stroke-dashoffset="${p/4}">
+        <!--circle class="donut-ring ring progress" cx="50" cy="50" r="45" stroke-dasharray="this._fromDasharray" stroke-dashoffset="${p/4}">
           <animate id="timer-ring"
                    attributeType="XML"
                    attributeName="stroke-dasharray"
@@ -167,13 +174,34 @@ class CasperTimedStatus extends LitElement {
                    to="${p} 0"
                    begin="indefinite">
           </animate>
+        </circle-->
+        <circle class="donut-ring ring progress ${this.progress === undefined ? 'indeterminate' : ''}"
+                cx="50" cy="50" r="45" stroke-dasharray="${this._fromDasharray}" stroke-dashoffset="${p/4}">
+          <animate id="p-anime"
+            attributeType="XML"
+            attributeName="stroke-dasharray"
+            dur="1s"
+            to="${this._toDasharray}"
+            begin="indefinite"
+            fill="freeze">
+          </animate>
         </circle>
-        ${this.progress === undefined
-          ? svg`<circle class="donut-ring ring progress indeterminate" cx="50" cy="50" r="45"></circle>`
-          : svg`<circle class="donut-ring ring progress" cx="50" cy="50" r="45" stroke-dasharray="${p1} ${p2}" stroke-dashoffset="${p/4}"></circle>`
-        }`}
       </svg>
     `;
+  }
+
+  firstUpdated () {
+    this._progress = this.shadowRoot.getElementById('progress');
+    this._panime = this.shadowRoot.getElementById('p-anime'); // progress ring animation
+    this._icon   = this.icon;
+  }
+
+  updated (changedProperties) {
+    if ( changedProperties.has('progress') ) {
+      //if ( this.progress !== undefined ) {
+        this._panime.beginElement();
+      //}
+    }
   }
 }
 
