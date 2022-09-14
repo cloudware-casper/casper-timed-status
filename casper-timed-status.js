@@ -19,35 +19,37 @@
  */
 
 import { html, css, svg, LitElement } from 'lit';
-import '@cloudware-casper/casper-icons/casper-icon.js';
+import { CasperIcon } from '@cloudware-casper/casper-icons/casper-icon.js';
+
+CasperIcon.register('casper-timed-status:error', svg`
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48.9937 18.3511C49.0711 18.1399 49.275 18 49.5 18C49.725 18 49.9289 18.1399 50.0063 18.3511L50.9977 21.0002L53.6484 21.993C53.8594 22.0725 54 22.2743 54 22.5C54 22.7257 53.8594 22.9275 53.6484 23.007L50.9977 23.9998L50.0063 26.6484C49.9289 26.8594 49.725 27 49.5 27C49.275 27 49.0711 26.8594 48.9937 26.6484L48.0023 23.9998L45.2883 23.007C45.0773 22.9275 45 22.7257 45 22.5C45 22.2743 45.0773 22.0725 45.2883 21.993L48.0023 21.0002L48.9937 18.3511ZM38.3484 24.8463C39.2273 23.9681 40.6477 23.9681 41.5266 24.8463L43.5445 26.8664L44.768 25.643C45.2039 25.2 45.9211 25.2 46.357 25.643C46.8 26.0789 46.8 26.7961 46.357 27.232L45.1336 28.4555L47.1516 30.4734C48.0305 31.3523 48.0305 32.7727 47.1516 33.6516L46.3922 34.418C46.9477 35.9648 47.25 37.6383 47.25 39.375C47.25 47.4539 40.7039 54 32.625 54C24.5475 54 18 47.4539 18 39.375C18 31.2961 24.5475 24.75 32.625 24.75C34.3617 24.75 36.0352 25.0523 37.582 25.6148L38.3484 24.8463ZM24.6867 38.8125C24.6867 34.7766 28.0266 31.5 31.9992 31.5H32.5617C33.2438 31.5 33.6867 30.9938 33.6867 30.375C33.6867 29.7562 33.2438 29.25 32.5617 29.25H31.9992C26.782 29.25 22.4367 33.532 22.4367 38.8125V39.375C22.4367 39.9938 23.0034 40.5 23.5617 40.5C24.2466 40.5 24.6867 39.9938 24.6867 39.375V38.8125Z" fill="white"/>
+      </svg>`);
+
+CasperIcon.register('casper-timed-status:timeout', svg`
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M23 21.625C23 20.7279 23.7279 20 24.625 20H47.375C48.2755 20 49 20.7279 49 21.625C49 22.5221 48.2755 23.25 47.375 23.25H46.8333V24.5351C46.8333 27.2651 45.6891 29.8245 43.8203 31.8151L38.2953 37.3333L43.8203 42.8516C45.6891 44.7813 46.8333 47.4016 46.8333 50.1302V51.4167H47.375C48.2755 51.4167 49 52.1411 49 53.0417C49 53.9422 48.2755 54.6667 47.375 54.6667H24.625C23.7279 54.6667 23 53.9422 23 53.0417C23 52.1411 23.7279 51.4167 24.625 51.4167H25.1667V50.1302C25.1667 47.4016 26.2507 44.7813 28.181 42.8516L33.7047 37.3333L28.181 31.8151C26.2507 29.8245 25.1667 27.2651 25.1667 24.5351V23.25H24.625C23.7279 23.25 23 22.5221 23 21.625ZM43.5833 24.5351V23.25H28.4167V24.5351C28.4167 26.4025 29.1588 28.1927 30.4818 29.513L36 35.038L41.5182 29.513C42.8385 28.1927 43.5833 26.4025 43.5833 24.5351Z" fill="white"/>
+      </svg>`);
+
+CasperIcon.register('casper-timed-status:check', svg`
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28.8457 45.4486L23.1745 39.5679C21.6085 37.944 21.6085 35.3111 23.1745 33.6872C24.7406 32.0633 27.2797 32.0633 28.8457 33.6872L31.6811 36.6278L42.6876 26.1839C44.2587 24.5922 46.7723 24.6074 48.3255 26.2179C49.8786 27.8285 49.8933 30.4349 48.3583 32.0641L34.5164 45.4486C33.7651 46.2297 32.7445 46.6681 31.6806 46.6667C30.6173 46.668 29.5969 46.2297 28.8457 45.4486Z" fill="white"/>
+      </svg>`);
 
 class CasperTimedStatus extends LitElement {
 
   static properties = {
-    state: {
-      type: String,
-      reflect: false
-    },
-    timeout: {
-      type: Number,
-      reflect: false
-    },
-    progress: {
-      type: Number,
-      reflect: false
-    },
-    icon: {
-      type: String,
-      reflect: false
-    }
+    state:    { type: String },
+    timeout:  { type: Number },
+    progress: { type: Number },
   }
 
   static styles = css`
     :host {
       display: flex;
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
     }
 
     .hide {
@@ -61,7 +63,7 @@ class CasperTimedStatus extends LitElement {
     }
 
     .ring {
-      stroke: #d2d3d4;
+      stroke: var(--casper-timed-status-ring-color, #999);
       stroke-width: 9;
       stroke-linecap: round;
       fill: transparent;
@@ -69,11 +71,14 @@ class CasperTimedStatus extends LitElement {
     }
 
     .progress {
-      stroke: var(--izibizi-primary-color);
+      stroke: var(--casper-timed-status-progress-color, #FFF);
     }
 
     .timer {
-      stroke: #888;
+      fill: none;
+      stroke: var(--casper-timed-status-countdown-color, #AAA);
+      stroke-width: 44;
+      transform: scale(-1,1) translate(-100%, 0px);
     }
 
     .indeterminate {
@@ -100,7 +105,7 @@ class CasperTimedStatus extends LitElement {
     super();
     this.state    = 'idle';
     this.progress = undefined;
-    this.timeout  = 30;
+    this.timeout  = 5;
     window.p = this;
   }
 
@@ -111,33 +116,49 @@ class CasperTimedStatus extends LitElement {
 
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
+      this._borderClass    = 'donut-ring ring';
+      const style = window.getComputedStyle(this);
       switch (this.state) {
         case 'connecting':
-          this._pclass  = '';
-          this._icon    = this.icon;
-          this.progress = undefined;
+          this.progress       = undefined;
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
+          this._progressClass = 'donut-ring ring progress indeterminate';
+          this._timerClass    = 'timer';
+          this._tanime.beginElement();
           break;
         case 'connected':
-          this._pclass  = '';
-          this._icon    = this.icon;
-          this.progress = 0;
-          //this._animation.beginElement();
+          this.progress       = 0;
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
+          this._progressClass = 'donut-ring ring progress';
+          this._timerClass    = 'timer';
+          this._tanime.beginElement();
+          break;
+        case 'in-progress':
+          this.progress       = 0;
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
+          this._timerClass    = 'hide';
+          this._progressClass = 'donut-ring ring progress';
           break;
         case 'success':
-          this._icon   = '/static/icons/check';
-          this._pclass = 'hide';
+          this.progress       = 100;
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon-check').trim() || 'casper-timed-status:check'; // /static/icons/check
+          this._timerClass    = 'hide';
+          this._progressClass = 'donut-ring ring progress';
           break;
         case 'error':
-          this._icon   = '/static/icons/error';
-          this._pclass = 'hide';
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon-error').trim() || 'casper-timed-status:error'; // /static/icons/error
+          this._timerClass    = 'hide';
+          this._progressClass = 'donut-ring hide';
           break;
         case 'timeout':
-          this._icon   = '/static/icons/timeout';
-          this._pclass = 'hide';
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon-timeout').trim() || 'casper-timed-status:timeout'; //''; '/static/icons/timeout';
+          this._timerClass    = 'hide';
+          this._progressClass = 'donut-ring hide';
           break;
         default:
-          this._icon   = this.icon;
-          this._pclass = '';
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
+          this._timerClass    = 'hide';
+          this._progressClass = 'hide';
           break;
       }
     }
@@ -157,25 +178,23 @@ class CasperTimedStatus extends LitElement {
   }
 
   render () {
-    console.log('render cts');
+    const tm = Math.PI * 2 * 22; // 45 is the radius of the timer circle
     const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
-    const p1 = this.progress / 100 * p;
-    const p2 = p - p1;
 
     return html`
-      <casper-icon class="ball" icon=${this._icon}></casper-icon>
-      <svg class="ball ${this._pclass}" viewBox="0 0 100 100">
-        <circle class="donut-ring ring" cx="50" cy="50" r="45"></circle>
-        <!--circle class="donut-ring ring progress" cx="50" cy="50" r="45" stroke-dasharray="this._fromDasharray" stroke-dashoffset="${p/4}">
-          <animate id="timer-ring"
+      <svg class="ball" viewBox="0 0 100 100">
+        <circle class="timer" cx="50" cy="50" r="22" stroke-dasharray="0 ${tm}" stroke-dashoffset="${tm/4}">
+          <animate id="t-anime"
                    attributeType="XML"
                    attributeName="stroke-dasharray"
                    dur="${this.timeout}s"
-                   to="${p} 0"
-                   begin="indefinite">
+                   to="${tm} 0"
+                   begin="indefinite"
+                   fill="freeze">
           </animate>
-        </circle-->
-        <circle class="donut-ring ring progress ${this.progress === undefined ? 'indeterminate' : ''}"
+        </circle>
+        <circle class="${this._borderClass}" cx="50" cy="50" r="45"></circle>
+        <circle class="${this._progressClass}"
                 cx="50" cy="50" r="45" stroke-dasharray="${this._fromDasharray}" stroke-dashoffset="${p/4}">
           <animate id="p-anime"
             attributeType="XML"
@@ -187,20 +206,23 @@ class CasperTimedStatus extends LitElement {
           </animate>
         </circle>
       </svg>
+      <casper-icon class="ball" icon=${this._icon}></casper-icon>
     `;
   }
 
   firstUpdated () {
     this._progress = this.shadowRoot.getElementById('progress');
-    this._panime = this.shadowRoot.getElementById('p-anime'); // progress ring animation
-    this._icon   = this.icon;
+    this._panime   = this.shadowRoot.getElementById('p-anime'); // progress ring animation
+    this._tanime   = this.shadowRoot.getElementById('t-anime'); // timer ring animation
+    this._tanime.addEventListener('endEvent', (event) => { this.state = 'timeout'});
+    this._icon     = this.icon;
   }
 
   updated (changedProperties) {
     if ( changedProperties.has('progress') ) {
-      //if ( this.progress !== undefined ) {
+      if ( this.progress !== undefined ) {
         this._panime.beginElement();
-      //}
+      }
     }
   }
 }
