@@ -81,6 +81,11 @@ class CasperTimedStatus extends LitElement {
       transform: scale(-1,1) translate(-100%, 0px);
     }
 
+    .timer-stopped {
+      fill: red;
+      stroke: none;
+    }
+
     .indeterminate {
       stroke-dasharray: 188.5;
       animation:
@@ -105,7 +110,7 @@ class CasperTimedStatus extends LitElement {
     super();
     this.state    = 'idle';
     this.progress = undefined;
-    this.timeout  = 5;
+    this.timeout  = 30;
     window.p = this;
   }
 
@@ -116,13 +121,13 @@ class CasperTimedStatus extends LitElement {
 
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
-      this._borderClass    = 'donut-ring ring';
       const style = window.getComputedStyle(this);
       switch (this.state) {
         case 'connecting':
           this.progress       = undefined;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'donut-ring ring progress indeterminate';
+          this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           this._tanime.beginElement();
           break;
@@ -130,35 +135,47 @@ class CasperTimedStatus extends LitElement {
           this.progress       = 0;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'donut-ring ring progress';
+          this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           this._tanime.beginElement();
           break;
         case 'in-progress':
           this.progress       = 0;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
-          this._timerClass    = 'hide';
           this._progressClass = 'donut-ring ring progress';
+          this._borderClass   = 'donut-ring ring';
+          this._timerClass    = 'hide';
           break;
         case 'success':
           this.progress       = 100;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-check').trim() || 'casper-timed-status:check'; // /static/icons/check
-          this._timerClass    = 'hide';
           this._progressClass = 'donut-ring ring progress';
+          this._borderClass   = 'donut-ring ring';
+          this._timerClass    = 'hide';
+          this._tanime.endElement();
           break;
         case 'error':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-error').trim() || 'casper-timed-status:error'; // /static/icons/error
+          this._progressClass = 'hide';
+          this._borderClass   = 'donut-ring ring timer-stop';
           this._timerClass    = 'hide';
-          this._progressClass = 'donut-ring hide';
+          this._tanime.endElement();
           break;
         case 'timeout':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-timeout').trim() || 'casper-timed-status:timeout'; //''; '/static/icons/timeout';
+          this._progressClass = 'hide';
+          this._borderClass   = 'donut-ring ring timer-stop';
           this._timerClass    = 'hide';
-          this._progressClass = 'donut-ring hide';
+          this._tanime.endElement();
           break;
         default:
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
-          this._timerClass    = 'hide';
           this._progressClass = 'hide';
+          this._borderClass   = 'donut-ring ring';
+          this._timerClass    = 'hide';
+          if ( this._tanime ) {
+            this._tanime.endElement();
+          }
           break;
       }
     }
@@ -181,9 +198,11 @@ class CasperTimedStatus extends LitElement {
     const tm = Math.PI * 2 * 22; // 45 is the radius of the timer circle
     const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
 
+    console.log(`${this.state} / ${this._icon}`);
+
     return html`
       <svg class="ball" viewBox="0 0 100 100">
-        <circle class="timer" cx="50" cy="50" r="22" stroke-dasharray="0 ${tm}" stroke-dashoffset="${tm/4}">
+        <circle class="${this._timerClass}" cx="50" cy="50" r="22" stroke-dasharray="0 ${tm}" stroke-dashoffset="${tm/4}">
           <animate id="t-anime"
                    attributeType="XML"
                    attributeName="stroke-dasharray"
@@ -214,7 +233,11 @@ class CasperTimedStatus extends LitElement {
     this._progress = this.shadowRoot.getElementById('progress');
     this._panime   = this.shadowRoot.getElementById('p-anime'); // progress ring animation
     this._tanime   = this.shadowRoot.getElementById('t-anime'); // timer ring animation
-    this._tanime.addEventListener('endEvent', (event) => { this.state = 'timeout'});
+    this._tanime.addEventListener('endEvent', (event) => { 
+      if ( ['connecting', 'connected', 'in-progress'].includes(this.state)) {
+        this.state = 'timeout';
+      }
+    });
     this._icon     = this.icon;
   }
 
