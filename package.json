@@ -1,7 +1,7 @@
 {
   "name": "@cloudware-casper/casper-timed-status",
   "main": "casper-timed-status.js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Progress and status indicator with timeout visualisation",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
