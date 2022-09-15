@@ -128,7 +128,7 @@ class CasperTimedStatus extends LitElement {
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           if ( changedProperties.get('state') !== 'connected' ) {
-            this._tanime.beginElement();
+            this._tanime?.beginElement();
           }
           break;
         case 'connected':
@@ -138,7 +138,7 @@ class CasperTimedStatus extends LitElement {
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           if ( changedProperties.get('state') !== 'connecting' ) {
-            this._tanime.beginElement();
+            this._tanime?.beginElement();
           }
           break;
         case 'in-progress':
@@ -154,30 +154,28 @@ class CasperTimedStatus extends LitElement {
           this._progressClass = 'donut-ring ring progress';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
-          this._tanime.endElement();
+          this._tanime?.endElement();
           break;
         case 'error':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-error').trim() || 'casper-timed-status:error'; // /static/icons/error
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring timer-stopped';
           this._timerClass    = 'hide';
-          this._tanime.endElement();
+          this._tanime?.endElement();
           break;
         case 'timeout':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-timeout').trim() || 'casper-timed-status:timeout'; //''; '/static/icons/timeout';
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring timer-stopped';
           this._timerClass    = 'hide';
-          this._tanime.endElement();
+          this._tanime?.endElement();
           break;
         default:
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
-          if ( this._tanime ) {
-            this._tanime.endElement();
-          }
+          this._tanime?.endElement();
           break;
       }
     }
