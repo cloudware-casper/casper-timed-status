@@ -206,8 +206,7 @@ class CasperTimedStatus extends LitElement {
                    attributeName="stroke-dasharray"
                    dur="${this.timeout}s"
                    to="${tm} 0"
-                   begin="indefinite"
-                   fill="freeze">
+                   begin="indefinite">
           </animate>
         </circle>
         <circle class="${this._borderClass}" cx="50" cy="50" r="45"></circle>
@@ -236,7 +235,12 @@ class CasperTimedStatus extends LitElement {
         this.state = 'timeout';
       }
     });
-    this._icon     = this.icon;
+    switch (this.state) {
+      case 'connecting':
+      case 'connected':
+        this._tanime.beginElement();
+        break;
+    }
   }
 
   updated (changedProperties) {
