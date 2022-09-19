@@ -132,7 +132,6 @@ class CasperTimedStatus extends LitElement {
           }
           break;
         case 'connected':
-          this.progress       = 0;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'donut-ring ring progress';
           this._borderClass   = 'donut-ring ring';
@@ -142,7 +141,6 @@ class CasperTimedStatus extends LitElement {
           }
           break;
         case 'in-progress':
-          this.progress       = 0;
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'donut-ring ring progress';
           this._borderClass   = 'donut-ring ring';
