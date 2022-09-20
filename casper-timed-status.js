@@ -36,6 +36,11 @@ CasperIcon.register('casper-timed-status:check', svg`
         <path d="M28.8457 45.4486L23.1745 39.5679C21.6085 37.944 21.6085 35.3111 23.1745 33.6872C24.7406 32.0633 27.2797 32.0633 28.8457 33.6872L31.6811 36.6278L42.6876 26.1839C44.2587 24.5922 46.7723 24.6074 48.3255 26.2179C49.8786 27.8285 49.8933 30.4349 48.3583 32.0641L34.5164 45.4486C33.7651 46.2297 32.7445 46.6681 31.6806 46.6667C30.6173 46.668 29.5969 46.2297 28.8457 45.4486Z" fill="white"/>
       </svg>`);
 
+CasperIcon.register('casper-timed-status:cloud', svg`
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.2564 32.3229C20.2534 32.8976 20.2505 33.4574 20.4042 33.998C17.7479 35.3912 16 38.1154 16 41.0387C16 45.4423 19.5812 49 24 49H47C51.975 49 56 46.396 56 41.4451C56 38.9497 55.0987 37.2304 53.0342 35.7554C53.0533 35.707 53.0722 35.6582 53.0907 35.609C53.5732 34.3283 53.5365 31.5191 52.2184 30.0652C51.0154 28.617 48.3438 28.184 47.1124 28.4852L47.1103 28.4813C45.6836 24.9035 43.3682 22.3494 39 22.0401C35.2688 21.7436 31.975 23.0968 30 25.8957C29.0603 25.6417 28.0438 25.3991 27 25.3991C24.0162 25.3991 20.2573 28.5153 20.2573 32.0823C20.2573 32.1624 20.2569 32.2423 20.2565 32.3218L20.2564 32.3229Z" fill="white"/>
+      </svg>`);
+
 class CasperTimedStatus extends LitElement {
 
   static properties = {
@@ -165,6 +170,13 @@ class CasperTimedStatus extends LitElement {
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-timeout').trim() || 'casper-timed-status:timeout'; //''; '/static/icons/timeout';
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring timer-stopped';
+          this._timerClass    = 'hide';
+          this._tanime?.endElement();
+          break;
+        case 'pending':
+          this._icon          = style.getPropertyValue('--casper-timed-status-icon-pending').trim() || 'casper-timed-status:cloud'; //''; '/static/icons/cloud';
+          this._progressClass = 'hide';
+          this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
           this._tanime?.endElement();
           break;
