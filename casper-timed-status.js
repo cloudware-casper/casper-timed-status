@@ -115,15 +115,17 @@ class CasperTimedStatus extends LitElement {
     this.state    = 'idle';
     this.progress = undefined;
     this.timeout  = 30;
+    console.log('+++ CTS constructed');
+    window.pig = this;
   }
 
   //***************************************************************************************//
   //                                ~~~ LIT life cycle ~~~                                 //
   //***************************************************************************************//
 
-
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
+      console.log(`*** CTS state =>`, this.state);
       const style = window.getComputedStyle(this);
       switch (this.state) {
         case 'connecting':
@@ -132,9 +134,7 @@ class CasperTimedStatus extends LitElement {
           this._progressClass = 'donut-ring ring progress indeterminate';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
-          if ( changedProperties.get('state') !== 'connected' ) {
-            this._tanime?.beginElement();
-          }
+          this._timer = setTimeout((e) => this.state = 'timeout', this.timeout * 1000);
           break;
         case 'connected':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
@@ -142,7 +142,7 @@ class CasperTimedStatus extends LitElement {
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           if ( changedProperties.get('state') !== 'connecting' ) {
-            this._tanime?.beginElement();
+            this._timer = setTimeout((e) => this.state = 'timeout', this.timeout * 1000);
           }
           break;
         case 'in-progress':
@@ -150,6 +150,8 @@ class CasperTimedStatus extends LitElement {
           this._progressClass = 'donut-ring ring progress';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
         case 'success':
           this.progress       = 100;
@@ -157,39 +159,45 @@ class CasperTimedStatus extends LitElement {
           this._progressClass = 'donut-ring ring progress';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
-          this._tanime?.endElement();
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
         case 'error':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-error').trim() || 'casper-timed-status:error'; // /static/icons/error
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring timer-stopped';
           this._timerClass    = 'hide';
-          this._tanime?.endElement();
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
         case 'timeout':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-timeout').trim() || 'casper-timed-status:timeout'; //''; '/static/icons/timeout';
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring timer-stopped';
           this._timerClass    = 'hide';
-          this._tanime?.endElement();
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
         case 'pending':
           this._icon          = style.getPropertyValue('--casper-timed-status-icon-pending').trim() || 'casper-timed-status:cloud'; //''; '/static/icons/cloud';
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
-          this._tanime?.endElement();
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
         default:
           this._icon          = style.getPropertyValue('--casper-timed-status-icon').trim();
           this._progressClass = 'hide';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'hide';
-          this._tanime?.endElement();
+          clearTimeout(this._timer);
+          this._timer = undefined;
           break;
       }
     }
     if ( changedProperties.has('progress') ) {
+      console.log(`*** CTS progress =>`, this.progress);
       const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
 
       if ( this.progress === undefined ) {
@@ -208,6 +216,7 @@ class CasperTimedStatus extends LitElement {
     const tm = Math.PI * 2 * 22; // 45 is the radius of the timer circle
     const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
 
+    console.log(`### CTS render state: ${this.state} tanime ${this._tanime}`);
     return html`
       <svg class="ball" viewBox="0 0 100 100">
         <circle class="${this._timerClass}" cx="50" cy="50" r="22" stroke-dasharray="0 ${tm}" stroke-dashoffset="${tm/4}">
@@ -240,23 +249,28 @@ class CasperTimedStatus extends LitElement {
     this._progress = this.shadowRoot.getElementById('progress');
     this._panime   = this.shadowRoot.getElementById('p-anime'); // progress ring animation
     this._tanime   = this.shadowRoot.getElementById('t-anime'); // timer ring animation
-    this._tanime.addEventListener('endEvent', (event) => { 
-      if ( ['connecting', 'connected', 'in-progress'].includes(this.state)) {
-        this.state = 'timeout';
-      }
-    });
-    switch (this.state) {
-      case 'connecting':
-      case 'connected':
-        this._tanime.beginElement();
-        break;
-    }
   }
 
   updated (changedProperties) {
+    console.log(`### CTS update state: ${this.state} tanime ${this._tanime}`);
     if ( changedProperties.has('progress') ) {
       if ( this.progress !== undefined ) {
         this._panime.beginElement();
+      }
+    }
+    if ( changedProperties.has('state') ) {
+      switch (this.state) {
+        case 'connecting':
+          this._tanime.beginElement();
+          break;
+        case 'connected':
+          console.log(`state wos ${changedProperties.get('state')}`);
+          if ( changedProperties.get('state') !== 'connecting' ) {
+            this._tanime.beginElement();
+          }
+          break;
+        default:
+          this._tanime.endElement();
       }
     }
   }
