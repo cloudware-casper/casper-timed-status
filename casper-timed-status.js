@@ -115,8 +115,6 @@ class CasperTimedStatus extends LitElement {
     this.state    = 'idle';
     this.progress = undefined;
     this.timeout  = 30;
-    console.log('+++ CTS constructed');
-    window.pig = this;
   }
 
   //***************************************************************************************//
@@ -125,7 +123,6 @@ class CasperTimedStatus extends LitElement {
 
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
-      console.log(`*** CTS state =>`, this.state);
       const style = window.getComputedStyle(this);
       switch (this.state) {
         case 'connecting':
@@ -197,7 +194,6 @@ class CasperTimedStatus extends LitElement {
       }
     }
     if ( changedProperties.has('progress') ) {
-      console.log(`*** CTS progress =>`, this.progress);
       const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
 
       if ( this.progress === undefined ) {
@@ -216,7 +212,6 @@ class CasperTimedStatus extends LitElement {
     const tm = Math.PI * 2 * 22; // 45 is the radius of the timer circle
     const p  = Math.PI * 2 * 45; // 45 is the radius of the circle in the svg
 
-    console.log(`### CTS render state: ${this.state} tanime ${this._tanime}`);
     return html`
       <svg class="ball" viewBox="0 0 100 100">
         <circle class="${this._timerClass}" cx="50" cy="50" r="22" stroke-dasharray="0 ${tm}" stroke-dashoffset="${tm/4}">
@@ -252,7 +247,6 @@ class CasperTimedStatus extends LitElement {
   }
 
   updated (changedProperties) {
-    console.log(`### CTS update state: ${this.state} tanime ${this._tanime}`);
     if ( changedProperties.has('progress') ) {
       if ( this.progress !== undefined ) {
         this._panime.beginElement();
@@ -264,7 +258,6 @@ class CasperTimedStatus extends LitElement {
           this._tanime.beginElement();
           break;
         case 'connected':
-          console.log(`state wos ${changedProperties.get('state')}`);
           if ( changedProperties.get('state') !== 'connecting' ) {
             this._tanime.beginElement();
           }
