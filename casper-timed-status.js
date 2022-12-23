@@ -124,6 +124,7 @@ class CasperTimedStatus extends LitElement {
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
       const style = window.getComputedStyle(this);
+      console.log(`CTS ${changedProperties.get('state')} => ${this.state}`);
       switch (this.state) {
         case 'connecting':
           this.progress       = undefined;
@@ -131,6 +132,7 @@ class CasperTimedStatus extends LitElement {
           this._progressClass = 'donut-ring ring progress indeterminate';
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
+          clearTimeout(this._timer);
           this._timer = setTimeout((e) => this.state = 'timeout', this.timeout * 1000);
           break;
         case 'connected':
@@ -139,6 +141,7 @@ class CasperTimedStatus extends LitElement {
           this._borderClass   = 'donut-ring ring';
           this._timerClass    = 'timer';
           if ( changedProperties.get('state') !== 'connecting' ) {
+            clearTimeout(this._timer);
             this._timer = setTimeout((e) => this.state = 'timeout', this.timeout * 1000);
           }
           break;
