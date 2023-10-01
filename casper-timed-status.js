@@ -124,7 +124,6 @@ class CasperTimedStatus extends LitElement {
   willUpdate (changedProperties) {
     if ( changedProperties.has('state') ) {
       const style = window.getComputedStyle(this);
-      console.log(`CTS ${changedProperties.get('state')} => ${this.state}`);
       switch (this.state) {
         case 'connecting':
           this.progress       = undefined;
